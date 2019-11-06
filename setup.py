@@ -14,7 +14,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='tg_tqdm',
+    name='tg_tqdmX',
     version='0.0.2',
     description='Extension for tqdm progressbar in Telegram',
     license='MPLv2.0, MIT Licences',
