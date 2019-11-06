@@ -8,9 +8,9 @@ class _TelegramIO():
     def __init__(self, token, chat_id, message_id=None, show_last_update=True):
         self.bot = telepot.Bot(token)
         self.chat_id = chat_id
-        self.text = self.prev_text = '<< Init tg_tqdm bar >>'
+        self.text = self.prev_text = 'Init tg_tqdm bar'
         if message_id is None:
-            self.message_id = self.bot.sendMessage(chat_id, escape(self.text), parse_mode='HTML')['message_id']
+            self.message_id = self.bot.sendMessage(chat_id, self.text)['message_id']
         else:
             self.message_id = message_id
         self.show_last_update = show_last_update
@@ -23,8 +23,8 @@ class _TelegramIO():
     def flush(self):
         if self.prev_text != self.text:
             if '%' in self.text:
-                self.bot.editMessageText((self.chat_id, self.message_id), escape(self.text +
-                                         '\nLast update: {}'.format(datetime.now()) if self.show_last_update else self.text),
+                self.bot.editMessageText((self.chat_id, self.message_id), (self.text +
+                                         '\nLast update: {}'.format(datetime.now()) if self.show_last_update else self.text) + '</pre>',
                                          parse_mode='HTML')
                 self.prev_text = self.text
 
