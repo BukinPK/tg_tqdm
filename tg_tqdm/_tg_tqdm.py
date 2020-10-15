@@ -1,10 +1,9 @@
-import telepot
 import telegram.ext
 from tqdm import tqdm
 from datetime import datetime
 
 
-class _TelegramIO():
+class _TelegramIO:
     def __init__(self, token, chat_id, show_last_update=True, parse_mode=None):
         self.updater = telegram.ext.Updater(token=token, use_context=True,
                                             defaults=telegram.ext.Defaults(parse_mode=parse_mode))
@@ -21,15 +20,15 @@ class _TelegramIO():
 
     def flush(self):
         if self.prev_text != self.text:
-            text = self.text + '\nLast update: {datetime.now()}' if self.show_last_update else self.text
+            text = self.text + f'\nLast update: {datetime.now()}' if self.show_last_update else self.text
             self.updater.bot.edit_message_text(text, self.chat_id, self.message_id)
             self.prev_text = self.text
 
 
 def tg_tqdm(iterable, token, chat_id, show_last_update=True, parse_mode=None,
-            desc=None, total=None, leave=True, ncols=None, mininterval=1.0, maxinterval=10.0,
-            miniters=None, ascii=False, disable=False, unit='it',
-            unit_scale=False, dynamic_ncols=False, smoothing=0.3,
+            desc=None, total=None, leave=True, ncols=None, mininterval=1.0,
+            maxinterval=10.0, miniters=None, ascii=False, disable=False,
+            unit='it', unit_scale=False, dynamic_ncols=False, smoothing=0.3,
             bar_format=None, initial=0, position=None, postfix=None,
             unit_divisor=1000, gui=False, **kwargs):
     """
@@ -39,6 +38,7 @@ def tg_tqdm(iterable, token, chat_id, show_last_update=True, parse_mode=None,
     
         Parameters
         ----------
+        parse_mode  : HTML or MARKUP
         iterable  : iterable, required
             Iterable to decorate with a progressbar.
             Leave blank to manually manage the updates.
