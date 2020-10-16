@@ -64,5 +64,5 @@ class TgTqdm:
 
 def tg_tqdm(iterable, token, chat_id, show_last_update=True, parse_mode=None,
             **kwargs):
-    return TgTqdm(iterable, token, chat_id, show_last_update=show_last_update,
+    return TgTqdm(token, chat_id, show_last_update=show_last_update,
                   parse_mode=parse_mode, **kwargs)(iterable)
