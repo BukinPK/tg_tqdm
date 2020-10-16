@@ -27,7 +27,7 @@ class _TelegramIO:
 
 class TgTqdm:
 
-    def __init__(self, token, chat_id, show_last_update=True, parse_mode=None,
+    def __init__(self, token, chat_id, show_last_update=False, parse_mode=None,
                  **kwargs):
         """
         Decorate an iterable object, returning an iterator which acts exactly
@@ -62,7 +62,7 @@ class TgTqdm:
         return tqdm(iterable=iterable, file=self.tg_io, **kwargs)
 
 
-def tg_tqdm(iterable, token, chat_id, show_last_update=True, parse_mode=None,
+def tg_tqdm(iterable, token, chat_id, show_last_update=False, parse_mode=None,
             **kwargs):
-    return TgTqdm(token, chat_id, show_last_update=show_last_update,
-                  parse_mode=parse_mode, **kwargs)(iterable)
+    return TgTqdm(token, chat_id, show_last_update, parse_mode,
+                  **kwargs)(iterable)
