@@ -25,57 +25,44 @@ class _TelegramIO:
             self.prev_text = self.text
 
 
+class TgTqdm:
+
+    def __init__(self, token, chat_id, show_last_update=True, parse_mode=None,
+                 **kwargs):
+        """
+        Decorate an iterable object, returning an iterator which acts exactly
+        like the original iterable, but send to Telegram a dynamically updating
+        progressbar every time a value is requested.
+
+            Parameters
+            ----------
+            parse_mode  : HTML or MARKUP
+
+            iterable  : iterable, required
+                Iterable to decorate with a progressbar.
+                Leave blank to manually manage the updates.
+            token  : string, required
+                Token of your telegram bot
+
+            chat_id  : int, required
+                Chat ID where information will be sent about the progress
+
+            show_last_update  : bool, optional [default: True]
+                Should I show the time-date of the last change in the progress bar?
+
+            desc, total, leave, ncols, ... :
+                Like in tqdm
+
+        """
+        self.tg_io = _TelegramIO(token, chat_id, show_last_update, parse_mode)
+        self.kwargs = kwargs
+
+    def __call__(self, iterable, **kwargs):
+        kwargs = {**self.kwargs, **kwargs}
+        return tqdm(iterable=iterable, file=self.tg_io, **kwargs)
+
+
 def tg_tqdm(iterable, token, chat_id, show_last_update=True, parse_mode=None,
-            desc=None, total=None, leave=True, ncols=None, mininterval=1.0,
-            maxinterval=10.0, miniters=None, ascii=False, disable=False,
-            unit='it', unit_scale=False, dynamic_ncols=False, smoothing=0.3,
-            bar_format=None, initial=0, position=None, postfix=None,
-            unit_divisor=1000, gui=False, **kwargs):
-    """
-    Decorate an iterable object, returning an iterator which acts exactly
-    like the original iterable, but send to Telegram a dynamically updating
-    progressbar every time a value is requested.
-    
-        Parameters
-        ----------
-        parse_mode  : HTML or MARKUP
-        iterable  : iterable, required
-            Iterable to decorate with a progressbar.
-            Leave blank to manually manage the updates.
-        token  : string, required
-            Token of your telegram bot
-            
-        chat_id  : int, required
-            Chat ID where information will be sent about the progress
-            
-        show_last_update  : bool, optional [default: True]
-            Should I show the time-date of the last change in the progress bar?
-            
-        desc, total, leave, ncols, ... :
-            Like in tqdm
-            
-    """
-    tg_io = _TelegramIO(token, chat_id, show_last_update, parse_mode)
-    return tqdm(
-        iterable=iterable,
-        desc=desc,
-        total=total,
-        leave=leave,
-        file=tg_io,
-        ncols=ncols,
-        mininterval=mininterval,
-        maxinterval=maxinterval,
-        miniters=miniters,
-        ascii=ascii,
-        disable=disable,
-        unit=unit,
-        unit_scale=unit_scale,
-        dynamic_ncols=dynamic_ncols,
-        smoothing=smoothing,
-        bar_format=bar_format,
-        initial=initial,
-        position=position,
-        postfix=postfix,
-        unit_divisor=unit_divisor,
-        gui=gui,
-        **kwargs)
+            **kwargs):
+    return TgTqdm(iterable, token, chat_id, show_last_update=show_last_update,
+                  parse_mode=parse_mode, **kwargs)(iterable)
