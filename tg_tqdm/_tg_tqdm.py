@@ -14,7 +14,7 @@ class _TelegramIO:
         self.show_last_update = show_last_update
 
     def write(self, s):
-        new_text = s.strip().replace('\r', '')
+        new_text = s.strip().replace('\r', '').replace('[A', '')
         if new_text:
             self.text = new_text
 
