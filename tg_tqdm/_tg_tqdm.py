@@ -12,7 +12,6 @@ class _TelegramIO:
         self.text = self.prev_text = '[init tg_tqdm bar]'
         self.message_id = self.updater.bot.send_message(chat_id, self.text)['message_id']
         self.show_last_update = show_last_update
-        self.show_last_update_time = datetime.now()
 
     def write(self, s):
         new_text = s.strip().replace('\r', '').replace('[A', '')
@@ -20,11 +19,9 @@ class _TelegramIO:
             self.text = new_text
 
     def flush(self):
-        if (self.prev_text != self.text
-                and self.show_last_update_time + timedelta(seconds=1) < datetime.now()):
+        if self.prev_text != self.text:
             text = self.text + f'\nLast update: {datetime.now()}' if self.show_last_update else self.text
             self.updater.bot.edit_message_text(text, self.chat_id, self.message_id)
-            self.show_last_update_time = datetime.now()
             self.prev_text = self.text
 
 
