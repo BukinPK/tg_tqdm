@@ -1,6 +1,6 @@
 import telegram.ext
 from tqdm import tqdm
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class _TelegramIO:
@@ -12,10 +12,12 @@ class _TelegramIO:
         self.text = self.prev_text = '[init tg_tqdm bar]'
         self.message_id = self.updater.bot.send_message(chat_id, self.text)['message_id']
         self.show_last_update = show_last_update
+        self.show_last_update_time = datetime.now()
 
     def write(self, s):
         new_text = s.strip().replace('\r', '').replace('[A', '')
-        if new_text:
+        if (self.show_last_update_time + timedelta(seconds=1) < datetime.now()
+                and new_text):
             self.text = new_text
 
     def flush(self):
