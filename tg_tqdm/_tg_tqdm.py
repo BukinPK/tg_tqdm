@@ -16,12 +16,12 @@ class _TelegramIO:
 
     def write(self, s):
         new_text = s.strip().replace('\r', '').replace('[A', '')
-        if (self.show_last_update_time + timedelta(seconds=1) < datetime.now()
-                and new_text):
+        if new_text:
             self.text = new_text
 
     def flush(self):
-        if self.prev_text != self.text:
+        if (self.prev_text != self.text
+                and self.show_last_update_time + timedelta(seconds=1) < datetime.now()):
             text = self.text + f'\nLast update: {datetime.now()}' if self.show_last_update else self.text
             self.updater.bot.edit_message_text(text, self.chat_id, self.message_id)
             self.show_last_update_time = datetime.now()
